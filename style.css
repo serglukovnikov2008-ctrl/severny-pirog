@@ -1,0 +1,50 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --pie-bg:     #f4f6f3;
+  --pie-card:   #ffffff;
+  --pie-text:   #111312;
+  --pie-muted:  #6b706b;
+  --pie-accent: #5fa22e;
+  --pie-border: #e3e7e1;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  background: var(--pie-bg);
+  color: var(--pie-text);
+}
+
+.muted { color: var(--pie-muted); }
+
+.menu {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.card {
+  background: var(--pie-card);
+  border: 1px solid var(--pie-border);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.price { font-weight: 700; color: var(--pie-accent); }
+
+button {
+  font: inherit;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--pie-accent);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+#out { font-weight: 700; min-height: 1.5em; }
