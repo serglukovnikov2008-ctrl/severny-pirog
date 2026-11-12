@@ -2,22 +2,67 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Северный пирог</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Северный пирог — школьный буфет</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="top">
+    <div class="brand">
+      <img src="pie.svg" alt="Брусничный пирог с решётчатой корочкой" class="logo">
+      <div>
+        <h1>Северный пирог</h1>
+        <p class="muted">Школьный буфет. Домашняя выпечка каждый день.</p>
+      </div>
+    </div>
+    <button id="themeBtn" type="button" class="btn btn--ghost">Тёмная тема</button>
+  </header>
 
-  <h1>Северный пирог</h1>
-  <p class="muted">Школьный буфет. Домашняя выпечка каждый день.</p>
+  <main>
+    <section class="controls">
+      <div class="filters" id="filters">
+        <button type="button" data-kind="все" class="btn btn--ghost is-active">Все</button>
+        <button type="button" data-kind="солёное" class="btn btn--ghost">Солёное</button>
+        <button type="button" data-kind="сладкое" class="btn btn--ghost">Сладкое</button>
+      </div>
+      <div class="actions-row">
+        <button id="sortBtn" type="button" class="btn btn--ghost">Сначала дешёвые</button>
+        <button id="totalBtn" type="button" class="btn btn--primary">Посчитать сумму</button>
+      </div>
+    </section>
 
-  <ul class="menu">
-    <li class="card">Калитка с картошкой — <span class="price" data-price="45">45 ₽</span></li>
-    <li class="card">Рыбник — <span class="price" data-price="95">95 ₽</span></li>
-    <li class="card">Брусничный пирог — <span class="price" data-price="70">70 ₽</span></li>
-  </ul>
-  <button id="sortBtn" type="button">Сначала дешёвые</button>
-  <button id="totalBtn" type="button">Посчитать сумму</button>
-  <p id="out"></p>
+    <ul class="menu" id="menu"></ul>
+    <p id="out" class="out"></p>
+
+    <section class="hours">
+      <h2>Часы работы</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>Когда буфет открыт</caption>
+          <thead>
+            <tr><th scope="col">День</th><th scope="col">Открыт</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Понедельник — пятница</th><td>8:30 — 15:00</td></tr>
+            <tr><th scope="row">Суббота</th><td>9:00 — 13:00</td></tr>
+            <tr><th scope="row">Воскресенье</th><td>выходной</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <p>Буфет «Северный пирог». Первый этаж, у актового зала. Заведующая — Марина Петровна.</p>
+  </footer>
+
+  <div class="modal hidden" id="modal">
+    <div class="modal__box">
+      <h3 id="modalTitle"></h3>
+      <p id="modalText"></p>
+      <button type="button" id="modalClose" class="btn btn--primary">Закрыть</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
