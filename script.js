@@ -1,107 +1,107 @@
-*, *::before, *::after { box-sizing: border-box; }
+const PIES = [
+  { id: "kalitka", name: "Калитка с картошкой", price: 45, kind: "солёное", parts: "Тесто ржаное, картофельное пюре, сметана, масло" },
+  { id: "shanga", name: "Шаньга со сметаной", price: 50, kind: "солёное", parts: "Тесто дрожжевое, сметана, творог, масло" },
+  { id: "rybnik", name: "Рыбник", price: 90, kind: "солёное", parts: "Тесто дрожжевое, филе трески, лук, специи" },
+  { id: "brusnika", name: "Брусничный пирог", price: 70, kind: "сладкое", parts: "Тесто песочное, брусника, сахар, крахмал" },
+  { id: "moroshka", name: "Морошковый пирог", price: 85, kind: "сладкое", parts: "Тесто песочное, морошка, сахар, крахмал" },
+  { id: "cherniga", name: "Черничная ватрушка", price: 60, kind: "сладкое", parts: "Тесто сдобное, творог, черника, сахар" }
+];
 
-:root {
-  --pie-bg: #f4f6f3;
-  --pie-card: #ffffff;
-  --pie-text: #111312;
-  --pie-muted: #6b706b;
-  --pie-accent: #5fa22e;
-  --pie-border: #e3e7e1;
+const menu = document.querySelector("#menu");
+const filters = document.querySelector("#filters");
+const sortBtn = document.querySelector("#sortBtn");
+const totalBtn = document.querySelector("#totalBtn");
+const out = document.querySelector("#out");
+const themeBtn = document.querySelector("#themeBtn");
+const modal = document.querySelector("#modal");
+const modalTitle = document.querySelector("#modalTitle");
+const modalText = document.querySelector("#modalText");
+const modalClose = document.querySelector("#modalClose");
+
+let currentKind = "все";
+let sorted = false;
+
+function visiblePies() {
+  return PIES.filter(function (pie) {
+    return currentKind === "все" || pie.kind === currentKind;
+  });
 }
 
-html[data-theme="dark"] {
-  --pie-bg: #0f0f0f;
-  --pie-card: #17191a;
-  --pie-text: #f2f4f1;
-  --pie-muted: #9ba29b;
-  --pie-accent: #7cc142;
-  --pie-border: #262a26;
+function renderMenu() {
+  let list = visiblePies();
+  if (sorted) {
+    list = [...list].sort(function (a, b) { return a.price - b.price; });
+  }
+  if (list.length === 0) {
+    menu.innerHTML = "<li>Ничего не найдено</li>";
+    return;
+  }
+  menu.innerHTML = list.map(function (pie) {
+    return `<li class="card" data-id="${pie.id}"><h3>${pie.name}</h3><p class="price">${pie.price} ₽</p><p class="muted">${pie.kind}</p></li>`;
+  }).join("");
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  background: var(--pie-bg);
-  color: var(--pie-text);
+function openModal(pie) {
+  modalTitle.textContent = pie.name;
+  modalText.textContent = pie.parts;
+  modal.classList.remove("hidden");
 }
+function closeModal() { modal.classList.add("hidden"); }
 
-main { flex: 1; padding: 16px; max-width: 960px; margin: 0 auto; width: 100%; }
+filters.addEventListener("click", function (event) {
+  const btn = event.target.closest("button");
+  if (btn === null) return;
+  currentKind = btn.dataset.kind;
+  filters.querySelectorAll("button").forEach(function (b) {
+    b.classList.toggle("is-active", b === btn);
+  });
+  renderMenu();
+});
 
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 16px;
-  background: var(--pie-card);
-  border-bottom: 1px solid var(--pie-border);
+sortBtn.addEventListener("click", function () {
+  sorted = !sorted;
+  sortBtn.textContent = sorted ? "Как в меню" : "Сначала дешёвые";
+  renderMenu();
+});
+
+totalBtn.addEventListener("click", function () {
+  let total = 0;
+  visiblePies().forEach(function (pie) { total = total + pie.price; });
+  out.textContent = "Сумма всех позиций в списке: " + total + " ₽";
+});
+
+menu.addEventListener("click", function (event) {
+  const card = event.target.closest(".card");
+  if (card === null) return;
+  const pie = PIES.find(function (p) { return p.id === card.dataset.id; });
+  if (pie) openModal(pie);
+});
+
+modalClose.addEventListener("click", closeModal);
+modal.addEventListener("click", function (event) {
+  if (event.target === modal) closeModal();
+});
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") closeModal();
+});
+
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    themeBtn.textContent = "Светлая тема";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    themeBtn.textContent = "Тёмная тема";
+  }
 }
-.brand { display: flex; align-items: center; gap: 12px; }
-.logo { width: 72px; height: auto; border-radius: 12px; }
-.top h1 { margin: 0; font-size: 24px; color: var(--pie-accent); }
-.muted { color: var(--pie-muted); margin: 0; }
+let savedTheme = "";
+try { savedTheme = localStorage.getItem("pie-theme") || ""; } catch (e) {}
+applyTheme(savedTheme);
+themeBtn.addEventListener("click", function () {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const next = isDark ? "light" : "dark";
+  applyTheme(next);
+  try { localStorage.setItem("pie-theme", next); } catch (e) {}
+});
 
-.controls { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.filters, .actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-.btn {
-  font: inherit;
-  font-weight: 600;
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: 2px solid var(--pie-border);
-  background: var(--pie-card);
-  color: var(--pie-text);
-  cursor: pointer;
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
-}
-.btn:hover { background: var(--pie-accent); color: #fff; border-color: var(--pie-accent); }
-.btn:focus-visible { outline: 3px solid var(--pie-accent); outline-offset: 3px; }
-.btn:active { transform: translateY(1px); }
-.btn--primary { background: var(--pie-accent); color: #fff; border-color: var(--pie-accent); }
-.btn.is-active { background: var(--pie-accent); color: #fff; border-color: var(--pie-accent); }
-
-.menu {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.card {
-  background: var(--pie-card);
-  border: 1px solid var(--pie-border);
-  border-radius: 14px;
-  padding: 16px;
-  cursor: pointer;
-  transition: transform 160ms ease;
-}
-.card:hover { transform: translateY(-2px); }
-.card h3 { margin: 0 0 8px; font-size: 18px; }
-.price { font-weight: 700; color: var(--pie-accent); margin: 0 0 4px; }
-.out { font-weight: 700; min-height: 1.5em; }
-
-.hours { margin-top: 24px; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; background: var(--pie-card); border-radius: 14px; overflow: hidden; }
-caption { text-align: left; font-weight: 600; padding: 8px 0; }
-th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--pie-border); }
-
-.bottom { padding: 16px; background: var(--pie-card); border-top: 1px solid var(--pie-border); color: var(--pie-muted); }
-
-.modal { position: fixed; inset: 0; background: rgba(17,19,18,.5); display: grid; place-items: center; padding: 16px; }
-.modal.hidden { display: none; }
-.modal__box { background: var(--pie-card); border-radius: 14px; padding: 24px; max-width: 420px; width: 100%; }
-
-@media (min-width: 600px) { .menu { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px) { .menu { grid-template-columns: repeat(3, 1fr); } }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-}
+renderMenu();
