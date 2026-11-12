@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-label="Брусничный пирог">
+  <rect width="240" height="160" rx="16" fill="#f4f6f3"/>
+  <ellipse cx="120" cy="122" rx="88" ry="16" fill="#d9c9a3"/>
+  <path d="M32 122a88 42 0 0 1 176 0z" fill="#e8d7ae"/>
+  <defs>
+    <clipPath id="pie-top"><ellipse cx="120" cy="96" rx="88" ry="26"/></clipPath>
+  </defs>
+  <ellipse cx="120" cy="96" rx="88" ry="26" fill="#b23a48"/>
+  <g clip-path="url(#pie-top)" stroke="#e8d7ae" stroke-width="10" stroke-linecap="round">
+    <path d="M40 80l160 32"/>
+    <path d="M40 112l160-32"/>
+    <path d="M92 70l56 52"/>
+    <path d="M148 70l-56 52"/>
+  </g>
+  <ellipse cx="120" cy="96" rx="88" ry="26" fill="none" stroke="#caa96f" stroke-width="6"/>
+</svg>
